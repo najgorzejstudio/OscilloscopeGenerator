@@ -1,19 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
+from matplotlib.ticker import MultipleLocator
 from scipy import signal
 
 
 def format_time(x, pos):
     # x is in seconds
-    if x >= 1:
+    abs_x = abs(x)
+
+    if abs_x < 1e-12:
+        return "0 µs"
+
+    if abs_x >= 1:
         return f"{x:.3g} s"
-    elif x >= 1e-3:
-        return f"{x*1e3:.3g} ms"
-    elif x >= 1e-6:
-        return f"{x*1e6:.3g} µs"
+    elif abs_x >= 1e-3:
+        return f"{x * 1e3:.3g}ms"
+    elif abs_x >= 1e-6:
+        return f"{x * 1e6:.3g}µs"
     else:
-        return f"{x*1e9:.3g} ns"
+        return f"{x * 1e9:.3g}ns"
 
 
 def format_voltage(v, pos):
@@ -55,6 +61,8 @@ def set_colorscheme(scheme, fig, ax, t, y, dict):
             ax.set_facecolor('white')  # plot background
             fig.patch.set_facecolor('white')  # figure background
             plt.plot(t, y, color = "#1f77b4")
+            ax.xaxis.set_minor_locator(MultipleLocator(0.2))
+            ax.grid(which='minor', color='gray', linestyle='--', linewidth=0.3, alpha=0.5)
         case "oscilloscope-digital":
             plt.grid(color='grey', linestyle='--', linewidth=0.5)
             ax.set_facecolor('black')  # plot background
